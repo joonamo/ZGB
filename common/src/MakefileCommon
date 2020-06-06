@@ -19,11 +19,11 @@ OBJDIR_ZGB = ../$(BUILD_TYPE)/zgb
 BINDIR = ../bin
 
 LCC = $(GBDK_HOME)/bin/lcc
-SDCC = sdcc
-SDASGB = sdasgb
+SDCC = $(GBDK_HOME)/bin/SDCC/bin/sdcc
+SDASGB = $(GBDK_HOME)/bin/SDCC/bin/sdasgb
 GBR2C = $(ZGB_PATH_UNIX)/../tools/gbr2c/gbr2c
 GBM2C = $(ZGB_PATH_UNIX)/../tools/gbm2c/gbm2c
-PNGB = $(ZGB_PATH_UNIX)/../env/pngb
+PNGB = $(ZGB_PATH_UNIX)/../../pngb/bin/pngb
 MOD2GBT = $(ZGB_PATH_UNIX)/../env/mod2gbt
 BGB = $(ZGB_PATH_UNIX)/../env/bgb/bgb
 ROMVIEW = $(ZGB_PATH_UNIX)/../env/romview/romview.exe
@@ -108,7 +108,8 @@ $(OBJDIR_RES_SRC)/%.gbr.c: ../res/%.gbr
 	@$(GBR2C) $< $(OBJDIR_RES_SRC)
 
 $(OBJDIR_RES_SRC)/%.png.c: ../res/%.png
-	@$(PNGB) -mgse $< $@
+	# @$(PNGB) -mgse $< $@
+	@$(PNGB) -vSse $< $@
 
 $(OBJDIR_RES)/%.o: $(OBJDIR_RES_SRC)/%.c
 	@echo compiling resource $<
@@ -149,10 +150,10 @@ $(OBJDIR)/%.o: %.c
 
 $(BINDIR)/$(PROJECT_NAME).$(EXTENSION): $(OBJDIR_ZGB)/zgb.lib $(OBJDIR) $(OBJDIR_RES) $(OBJDIR_RES_SRC) $(BINDIR) $(OBJS)
 	@echo Linking
-	$(LCC) $(LFLAGS) -k$(OBJDIR_ZGB) -lzgb.lib -o $(OBJDIR)/$(PROJECT_NAME).$(EXTENSION) $(OBJS)
+	$(LCC) $(LFLAGS) -Wl-k$(OBJDIR_ZGB) -Wl-lzgb.lib -o $(OBJDIR)/$(PROJECT_NAME).$(EXTENSION) $(OBJS) $(OBJS_ZGB)
 	mv .map $(OBJDIR)/$(PROJECT_NAME).map
 	mv .sym $(OBJDIR)/$(PROJECT_NAME).sym
-	$(ROMVIEW) $(OBJDIR)/$(PROJECT_NAME).$(EXTENSION) 255
+	# $(ROMVIEW) $(OBJDIR)/$(PROJECT_NAME).$(EXTENSION) 255
 	mv $(OBJDIR)/$(PROJECT_NAME).$(EXTENSION) $(BINDIR)/$(PROJECT_NAME).$(EXTENSION)
 
 build_lib: $(OBJDIR) $(OBJS)

@@ -251,3 +251,5 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+/tools/gbm2c/gbm2c
+/tools/gbr2c/gbr2c
